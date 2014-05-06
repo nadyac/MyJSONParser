@@ -25,6 +25,9 @@ public class MyJsonParser{
 		int missingTitles = 0;
 		int lineNumber = 0;
 
+		//----------------------------------------------------------
+		// Create the output file where the output will be printed
+		//----------------------------------------------------------
 			try{
 
 				File file = new File("Output.txt");
@@ -36,7 +39,6 @@ public class MyJsonParser{
 
 				FileWriter fw = new FileWriter(file.getAbsoluteFile());
 				BufferedWriter writer = new BufferedWriter(fw);
-
 
 		while((line = br.readLine()) != null){
 
@@ -73,12 +75,17 @@ public class MyJsonParser{
 				if((title != null) && (title != " ")){
 					repeatWords = countRepeatWords(title);
 					System.out.println("Line: " + lineNumber);
+				} else {
+					repeatWords = 0;
+					System.out.println("Line: " + lineNumber);
 				}
 
 				lineNumber++;
 
+				//-------------------------------------------------
 				//Write the repeat words to the output file
-				writer.write(""+ lineNumber + ") " + repeatWords);
+				//-------------------------------------------------
+				writer.write(""+ lineNumber + ") " + repeatWords + " title: " + title);
 				writer.newLine();
 
 			} catch (ParseException e){
@@ -94,8 +101,10 @@ public class MyJsonParser{
 		br.close();
 	} 
 
+	//---------------------------------------------------------------------------
 	//this method takes a string and counts how many repeated words there are.
 	// input: string output: number of repeated words in the string (int)
+	//---------------------------------------------------------------------------
 	protected static int countRepeatWords(String s){
 
 		int repeat_words = 0;
@@ -103,7 +112,6 @@ public class MyJsonParser{
 		//Create string array with all the words
 		String[] words = s.split(" ");
 		int arraySize = words.length;
-		//System.out.println("The title contains " + words.length + " words");
 
 		//-------------------------------------------------------------------------
 		// Compare the each word in the array of words, ignore articles
@@ -111,21 +119,18 @@ public class MyJsonParser{
 		for(int j = 0; j < (arraySize - 1); j++){
 
 			//update the current word that is being compared
-			String currentWord = words[j];
+			String currentWord = words[j].toLowerCase();
 
 			for(int i = j + 1; i < (arraySize -1); i++){
-				//System.out.println(arraySize);
-				//if(!isArticle(words[i]))
-				//System.out.println("Word number(i) " + i + " is " + words[i] + " and word number(j)" + j + " is " + currentWord);
 
-				if(!isArticle(words[i]) && !isArticle(words[j]) && currentWord.equals(words[i+1]) && words[i].length() > 1){
+				if(!isArticle(words[i]) && !isArticle(words[j]) && currentWord.equals(words[i+1].toLowerCase()) && words[i].length() > 1){
 					repeat_words++;
 					//System.out.println("There are " + repeat_words + " repeated words in this title");
 				}
 			}
 		}
 
-		System.out.println("There are " + repeat_words + " repeated words");
+		//System.out.println("There are " + repeat_words + " repeated words");
 		return repeat_words;
 	}
 
@@ -146,6 +151,18 @@ public class MyJsonParser{
 		} else if(m.equals("in")){
 			article = true;
 		} else if(m.equals("that")){
+			article = true;
+		} else if(m.equals("this")){
+			article = true;
+		} else if(m.equals("to")){
+			article = true;
+		} else if(m.equals("for")){
+			article = true;
+		} else if(m.equals("it")){
+			article = true;
+		} else if(m.equals("from")){
+			article = true;
+		} else if(m.equals("or")){
 			article = true;
 		}
 		return article;
