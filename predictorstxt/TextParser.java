@@ -28,63 +28,63 @@ public class TextParser{
 								"is_news.txt", "label.txt", "lengthyLinkDomain.txt", "linkwordscore.txt", "news_front_page.txt",
 								"non_markup_alphanum_characters.txt", "numberOfLinks.txt", "numwords_in_url.txt",
 								"parameterizedLinkRatio.txt", "spelling_errors_ratio.txt"};
-	//------------------------------------------------------------------------
-	// Create the output file where the hasCategory values will be written
-	//------------------------------------------------------------------------
-	try{
+		//------------------------------------------------------------------------
+		// Create the output file where the hasCategory values will be written
+		//------------------------------------------------------------------------
+		try{
 
-			File categoryFile = new File("hasCategory.txt");
+				File categoryFile = new File("hasCategory.txt");
 
-			if(!categoryFile.exists()){
-				categoryFile.createNewFile();
-			}
+				if(!categoryFile.exists()){
+					categoryFile.createNewFile();
+				}
 
-			FileWriter categoryWriter = new FileWriter(categoryFile.getAbsoluteFile());
-			BufferedWriter catWriter = new BufferedWriter(categoryWriter);
-		
-		//-------------------------------------------------------------------
-		// Print out how many missing values there are for each variable
-		//-------------------------------------------------------------------
-		for(i = 0; i < filenames.length; i++){
+				FileWriter categoryWriter = new FileWriter(categoryFile.getAbsoluteFile());
+				BufferedWriter catWriter = new BufferedWriter(categoryWriter);
+			
+			//-------------------------------------------------------------------
+			// Print out how many missing values there are for each variable
+			//-------------------------------------------------------------------
+			for(i = 0; i < filenames.length; i++){
 
-			File txtFile = new File(filenames[i]);
-			missingvalues = 0;
+				File txtFile = new File(filenames[i]);
+				missingvalues = 0;
 
-			if(!txtFile.exists()){
-				System.out.println("The file does not exist!");
-			}
+				if(!txtFile.exists()){
+					System.out.println("The file does not exist!");
+				}
 
-			Scanner txtscanner = new Scanner(txtFile);
+				Scanner txtscanner = new Scanner(txtFile);
 
-			while(txtscanner.hasNextLine()){
-				String predictor_value = txtscanner.nextLine();
+				while(txtscanner.hasNextLine()){
+					String predictor_value = txtscanner.nextLine();
 
-				if(predictor_value.equals("?")){
-					missingvalues++;
+					if(predictor_value.equals("?")){
+						missingvalues++;
+					} 
+					//------------------------------------------------------------------------------
+					// Populate the hasCategory.txt file. 
+					//------------------------------------------------------------------------------
+					if(filenames[i].equals("alchemy_category.txt") && predictor_value.equals("?")){
+						catWriter.write(""+"0");
+						catWriter.newLine();
+					}else{
+						catWriter.write(""+"1");
+						catWriter.newLine();
+					}
+					//-----------------------------------------------------------------------------
+					// Check how many Evergreen links there are
+					//-----------------------------------------------------------------------------
+					if(filenames[i].equals("label.txt") && predictor_value.equals("1")){
+						totalEvergreen++;
+					}
 				} 
-				//------------------------------------------------------------------------------
-				// Populate the hasCategory.txt file. 
-				//------------------------------------------------------------------------------
-				if(filenames[i].equals("alchemy_category.txt") && predictor_value.equals("?")){
-					catWriter.write(""+"0");
-					catWriter.newLine();
-				}else{
-					catWriter.write(""+"1");
-					catWriter.newLine();
-				}
-				//-----------------------------------------------------------------------------
-				// Check how many Evergreen links there are
-				//-----------------------------------------------------------------------------
-				if(filenames[i].equals("label.txt") && predictor_value.equals("1")){
-					totalEvergreen++;
-				}
-			} 
-			System.out.println("There are " + missingvalues + " missing in variable " + filenames[i] + " \n");
-		}
-		catWriter.close();
-	} catch (IOException ex){
-			System.out.println("Problem creating the file");
-	   }
+				System.out.println("There are " + missingvalues + " missing in variable " + filenames[i] + " \n");
+			}
+			catWriter.close();
+		} catch (IOException ex){
+				System.out.println("Problem creating the file");
+		   }
 	   
 	System.out.println("The number of Evergreen links in the training set are: " + totalEvergreen);
 	}
